@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "local-rag-chat"
+version = "0.1.0"
+description = "A project for RAG (Retrieval-Augmented Generation) using API or local LLM."
+authors = ["John <phanqu6ctoan@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+llama-index = "^0.11.16"
+pymupdf = "^1.24.11"
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
