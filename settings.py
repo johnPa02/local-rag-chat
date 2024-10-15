@@ -1,0 +1,1 @@
+CHAT_MSG_PLACEHOLDER = "Thinking..."

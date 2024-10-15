@@ -3,7 +3,7 @@ from llama_index.core import Document
 from core.loaders.base import BaseLoader
 import fitz
 import re
-
+from typing import List
 
 class SimpleLoader(BaseLoader):
     """
@@ -15,7 +15,7 @@ class SimpleLoader(BaseLoader):
         self.embed_model = embed_model
 
     @staticmethod
-    def _filter_text(text):
+    def _filter_text(text: str) -> str:
         """
         Filter text to remove unnecessary whitespaces and line breaks.
         """
@@ -31,7 +31,7 @@ class SimpleLoader(BaseLoader):
         text = re.sub(r"\n{3,}", "\n\n", text)
         return text
 
-    def load(self, file):
+    def load(self, file: str)-> List[Document]:
         reader = fitz.open(file)
         text = []
         for page_num in range(reader.page_count):
@@ -42,7 +42,7 @@ class SimpleLoader(BaseLoader):
         text = " ".join(text)
         return [Document(text=text)]
 
-    def split(self, documents):
+    def split(self, documents: List[Document]):
         if self.embed_model:
             node_parser = SemanticSplitterNodeParser(
                 buffer_size=1, breakpoint_percentile_threshold=95, embed_model=self.embed_model
