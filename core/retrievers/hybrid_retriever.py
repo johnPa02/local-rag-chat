@@ -2,17 +2,17 @@ from typing import Optional, List
 
 from llama_index.core import VectorStoreIndex, StorageContext
 from llama_index.core.base.base_retriever import BaseRetriever
-from llama_index.core.retrievers import QueryFusionRetriever
+from llama_index.core.base.embeddings.base import BaseEmbedding
+from llama_index.core.retrievers import QueryFusionRetriever, BM25Retriever
 from llama_index.core.schema import BaseNode, QueryBundle, NodeWithScore
 from llama_index.core.vector_stores.types import BasePydanticVectorStore
-from llama_index.legacy.retrievers import BM25Retriever
 
 
 class HybridRetriever(BaseRetriever):
     def __init__(
             self,
             nodes: list[BaseNode],
-            embed_model: str = "BAAI/bge-small-en-v1.5",
+            embed_model: BaseEmbedding,
             top_k: int = 5,
             vector_store: Optional[BasePydanticVectorStore] = None,
             **kwargs
@@ -28,7 +28,7 @@ class HybridRetriever(BaseRetriever):
         if self.nodes is None:
             raise ValueError("Nodes must be provided to the retriever.")
         else:
-            self._init_from_nodes()
+            return self._init_from_nodes()
 
     def _init_from_nodes(self):
         if self.vector_store is None:
@@ -54,6 +54,7 @@ class HybridRetriever(BaseRetriever):
             [vector_retriever, bm25_retriever],
             similarity_top_k=3,
             num_queries=1,
+            retriever_weights=[0.6, 0.4],
             mode="reciprocal_rerank"
             # llm=self.llm
         )

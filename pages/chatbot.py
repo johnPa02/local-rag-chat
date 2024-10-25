@@ -1,17 +1,18 @@
 import gradio as gr
 from gradio_pdf import PDF
 from pages.theme import CSS
+from pipeline import RAGPipeline
 from settings import CHAT_MSG_PLACEHOLDER
 
 
 class App:
-    def __init__(self, pipeline=None):
+    def __init__(self, pipeline: RAGPipeline):
         self._pipeline = pipeline
 
     def _get_response(self, query, history, file_box):
         text = ""
         yield history + [(query, CHAT_MSG_PLACEHOLDER)]
-        for response in self._pipeline.stream(query, history, file_box):
+        for response in self._pipeline.stream(query):
             text += response
             yield history + [(query, text or CHAT_MSG_PLACEHOLDER)]
 
