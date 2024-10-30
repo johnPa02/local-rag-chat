@@ -13,7 +13,7 @@ class ChatEngineManager:
         self.retriever = retriever
         self.llm = llm
         self.chat_mode = chat_mode
-        self.memory = ChatMemoryBuffer(tokens_limit=memory_limit)
+        self.memory = ChatMemoryBuffer(token_limit=memory_limit)
 
     def get_engine(self):
         if self.chat_mode == 'simple':

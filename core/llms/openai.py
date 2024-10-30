@@ -6,15 +6,11 @@ from llama_index.llms.openai import OpenAI
 
 
 class OpenAIModel(BaseLLMModel):
-    def __init__(
-            self,
-            model: str ="gpt-3.5-turbo",
-            api_key: str = "",
-            model_kwargs: Optional[dict] = None,
-    ):
+    def __init__(self, model: str = "gpt-3.5-turbo", api_key: str = "", model_kwargs: Optional[dict] = None):
         self.model = model
         self.api_key = api_key
         self.model_kwargs = model_kwargs
+        super().__init__()
 
     def load_llm(self):
 

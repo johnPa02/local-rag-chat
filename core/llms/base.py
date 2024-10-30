@@ -1,4 +1,6 @@
 class BaseLLMModel:
+    def __init__(self):
+        self.llm = None
     def load_llm(self):
         """
         Load the language model
@@ -12,3 +14,9 @@ class BaseLLMModel:
         :return: Any: the generated predictions
         """
         raise NotImplementedError
+
+    def get_llm(self):
+        """
+        Get llm model that follows base class that llama index classes require
+        """
+        return self.llm

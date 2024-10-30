@@ -1,5 +1,6 @@
 from typing import Optional
 
+from llama_index.core import Settings
 from llama_index.core.base.embeddings.base import BaseEmbedding
 from llama_index.core.base.llms.base import BaseLLM
 from llama_index.core.chat_engine.types import BaseChatEngine
@@ -19,7 +20,7 @@ class RAGPipeline:
             llm: str = "llama3",
             retriever_name: str = "hybrid",
             embedding: str = "BAAI/bge-small-en-v1.5",
-            chat_mode: str = "condense",
+            chat_mode: str = "condense_plus_context",
             loader: str = "simple",
     ):
         self.llm = llm
@@ -28,7 +29,11 @@ class RAGPipeline:
 
         self.retriever: Optional[HybridRetriever] = None
         self.embed_model: BaseEmbedding = EmbeddingManager(model=embedding).get_embedding()
-        self.llm_model: OpenAIModel | OllamaModel = self._initialize_llm()
+        Settings.embed_model = self.embed_model
+
+        self.llm_model: Optional[OpenAIModel | OllamaModel] = None
+        self._initialize_llm()
+
         self.chat_engine_manager: Optional[ChatEngineManager] = None
         self.chat_engine: Optional[BaseChatEngine] = None
         self.loader: BaseLoader = SimpleLoader(embed_model=self.embed_model)
@@ -36,13 +41,14 @@ class RAGPipeline:
 
     def _initialize_llm(self):
         if "gpt" in self.llm:
-            return OpenAIModel(model=self.llm)
+            self.llm_model = OpenAIModel(model=self.llm)
         else:
-            return OllamaModel(model=self.llm)
+            self.llm_model = OllamaModel(model=self.llm)
+        Settings.llm = self.llm_model.get_llm()
 
     def change_llm(self, llm: str):
         self.llm = llm
-        self.llm_model = self._initialize_llm()
+        self._initialize_llm()
 
     def _initialize_retriever(self, nodes: list[BaseNode]):
         if self.retriever_name == "hybrid":
@@ -76,8 +82,10 @@ class RAGPipeline:
             self._initialize_chat_engine()
         return self.chat_engine.stream_chat(query)
 
-    def process_documents(self, file_paths: list[str]):
+    def process_documents(self, file_paths: list[str] | str):
         documents = []
+        if isinstance(file_paths, str):
+            file_paths = [file_paths]
         for file in file_paths:
             documents.extend(self.loader.fit(file))
         self._initialize_retriever(documents)

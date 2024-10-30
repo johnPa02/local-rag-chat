@@ -9,7 +9,7 @@ class App:
     def __init__(self, pipeline: RAGPipeline):
         self._pipeline = pipeline
 
-    def _get_response(self, query, history, file_box):
+    def _get_response(self, query, history):
         text = ""
         yield history + [(query, CHAT_MSG_PLACEHOLDER)]
         for response in self._pipeline.stream(query):
@@ -22,10 +22,20 @@ class App:
             with gr.Row():
                 with gr.Column(scale=40):
                     model_name = gr.Dropdown(
-                        choices=["bert-base-uncased", "gpt2"],
+                        choices=["llm3", "llm2", "gpt-3.5"],
                         label="Model",
                     )
-                    file_box = PDF(label='Document', height=700, min_width=500)
+                    file_box = PDF(
+                        label='Document',
+                        height=700,
+                        min_width=500,
+                        interactive=True
+                    )
+                    file_box.upload(
+                        fn=self._pipeline.process_documents,
+                        inputs=[file_box],
+                        outputs=[gr.Textbox(visible=False)]
+                    )
                 with gr.Column(scale=60):
                     chatbot = gr.Chatbot(height=650)
                     text_box = gr.Textbox(
@@ -33,16 +43,16 @@ class App:
                         label="Chat message",
                         show_label=False,
                         container=False,
-                        placeholder="Type here...",
+                        placeholder="Type here..."
                     )
                     with gr.Row():
                         clear_btn = gr.ClearButton(
-                            [text_box, chatbot, file_box], variant="secondary", size="sm"
+                            [text_box, chatbot], variant="secondary", size="sm"
                         )
                         submit_btn = gr.Button("Submit", variant="primary", size="sm")
                         submit = submit_btn.click(
                             fn=self._get_response,
-                            inputs=[text_box, chatbot, file_box],
+                            inputs=[text_box, chatbot],
                             outputs=chatbot
                         )
         return app
