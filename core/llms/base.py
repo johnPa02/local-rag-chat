@@ -1,6 +1,7 @@
 class BaseLLMModel:
     def __init__(self):
         self.llm = None
+        self.load_llm()
     def load_llm(self):
         """
         Load the language model

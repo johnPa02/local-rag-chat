@@ -17,7 +17,7 @@ from core.embeddings.embedding_manager import EmbeddingManager
 class RAGPipeline:
     def __init__(
             self,
-            llm: str = "llama3",
+            llm: str = "llama3.2:1b",
             retriever_name: str = "hybrid",
             embedding: str = "BAAI/bge-small-en-v1.5",
             chat_mode: str = "condense_plus_context",
@@ -40,11 +40,13 @@ class RAGPipeline:
 
 
     def _initialize_llm(self):
+        llm_model = None
         if "gpt" in self.llm:
-            self.llm_model = OpenAIModel(model=self.llm)
+            llm_model = OpenAIModel(model=self.llm)
         else:
-            self.llm_model = OllamaModel(model=self.llm)
-        Settings.llm = self.llm_model.get_llm()
+            llm_model = OllamaModel(model=self.llm)
+        self.llm_model = llm_model.get_llm()
+        Settings.llm = llm_model.get_llm()
 
     def change_llm(self, llm: str):
         self.llm = llm

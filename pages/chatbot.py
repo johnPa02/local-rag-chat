@@ -14,10 +14,11 @@ class App:
         message = {'role': 'user', 'content': query}
         text = ""
         yield history + [message, DEFAULT_ASSISTANT_DICT]
-        for response in self._pipeline.stream(query):
-            text += response
+        streaming_response = self._pipeline.stream(query)
+        for token in streaming_response.response_gen:
+            text += token
             assistant_message = {'role': 'assistant', 'content': text}
-            yield history + [(message, assistant_message or DEFAULT_ASSISTANT_DICT)]
+            yield history + [message, assistant_message or DEFAULT_ASSISTANT_DICT]
 
 
     def build(self):
@@ -25,7 +26,7 @@ class App:
             with gr.Row():
                 with gr.Column(scale=40):
                     model_name = gr.Dropdown(
-                        choices=["llm3", "llm2", "gpt-3.5"],
+                        choices=["llm3.2:1b", "llm2", "gpt-3.5"],
                         label="Model",
                     )
                     file_box = PDF(
@@ -37,7 +38,8 @@ class App:
                     file_box.upload(
                         fn=self._pipeline.process_documents,
                         inputs=[file_box],
-                        outputs=[gr.Textbox(visible=False)]
+                        outputs=[gr.Textbox(visible=False)],
+                        show_progress='full'
                     )
                 with gr.Column(scale=60):
                     chatbot = gr.Chatbot(height=650, type='messages')
