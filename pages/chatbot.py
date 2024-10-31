@@ -37,7 +37,7 @@ class App:
                         outputs=[gr.Textbox(visible=False)]
                     )
                 with gr.Column(scale=60):
-                    chatbot = gr.Chatbot(height=650)
+                    chatbot = gr.Chatbot(height=650, type='messages')
                     text_box = gr.Textbox(
                         lines=2,
                         label="Chat message",

@@ -80,14 +80,3 @@ venv/
 # PyCharm
 .idea
 
-# Python mode for VIM
-.ropeproject
-*/.ropeproject
-*/*/.ropeproject
-*/*/*/.ropeproject
-
-# Vim swap files
-*.swp
-*/*.swp
-*/*/*.swp
-*/*/*/*.swp

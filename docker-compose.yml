@@ -1,14 +1,13 @@
-version: '3.8'
 services:
   app:
     build: .
     container_name: app
     ports:
-      - "5000:5000"
+      - "7860:7860"
     volumes:
       - .:/code
     depends_on:
-      - ollama_server
+      - ollama
     env_file:
       - .env
     networks:
@@ -20,7 +19,7 @@ services:
     ports:
       - "11434:11434"
     volumes:
-      - ./ollama:root/.ollama
+      - ./ollama:/root/.ollama
     networks:
       - internal_network
 
