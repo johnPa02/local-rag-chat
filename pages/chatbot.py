@@ -4,17 +4,20 @@ from pages.theme import CSS
 from pipeline import RAGPipeline
 from settings import CHAT_MSG_PLACEHOLDER
 
+DEFAULT_ASSISTANT_DICT = {'role': 'assistant', 'content': CHAT_MSG_PLACEHOLDER}
 
 class App:
     def __init__(self, pipeline: RAGPipeline):
         self._pipeline = pipeline
 
-    def _get_response(self, query, history):
+    def _get_response(self, query: str, history: list[dict[str, str]]):
+        message = {'role': 'user', 'content': query}
         text = ""
-        yield history + [(query, CHAT_MSG_PLACEHOLDER)]
+        yield history + [message, DEFAULT_ASSISTANT_DICT]
         for response in self._pipeline.stream(query):
             text += response
-            yield history + [(query, text or CHAT_MSG_PLACEHOLDER)]
+            assistant_message = {'role': 'assistant', 'content': text}
+            yield history + [(message, assistant_message or DEFAULT_ASSISTANT_DICT)]
 
 
     def build(self):
