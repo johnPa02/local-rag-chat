@@ -8,7 +8,11 @@ class OllamaModel(BaseLLMModel):
         super().__init__()
 
     def load_llm(self):
-        self.llm = Ollama(model=self.model, request_timeout=60.0)
+        self.llm = Ollama(
+            model=self.model,
+            base_url="http://ollama_server:11434",
+            request_timeout=60.0
+        )
 
     def predict(self, query):
         response = self.llm.complete(query)
