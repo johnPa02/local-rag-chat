@@ -2,7 +2,6 @@ from typing import Optional
 
 from llama_index.core import Settings
 from llama_index.core.base.embeddings.base import BaseEmbedding
-from llama_index.core.base.llms.base import BaseLLM
 from llama_index.core.chat_engine.types import BaseChatEngine
 from llama_index.core.schema import BaseNode
 
@@ -38,9 +37,7 @@ class RAGPipeline:
         self.chat_engine: Optional[BaseChatEngine] = None
         self.loader: BaseLoader = SimpleLoader(embed_model=self.embed_model)
 
-
     def _initialize_llm(self):
-        llm_model = None
         if "gpt" in self.llm:
             llm_model = OpenAIModel(model=self.llm)
         else:

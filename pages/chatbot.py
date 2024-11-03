@@ -2,31 +2,51 @@ import gradio as gr
 from gradio_pdf import PDF
 from pages.theme import CSS
 from pipeline import RAGPipeline
-from settings import CHAT_MSG_PLACEHOLDER
+from settings import CHAT_MSG_PLACEHOLDER, DEFAULT_MODEL_LIST
 
 DEFAULT_ASSISTANT_DICT = {'role': 'assistant', 'content': CHAT_MSG_PLACEHOLDER}
 
 class App:
     def __init__(self, pipeline: RAGPipeline):
         self._pipeline = pipeline
+        self.document_processed = False
 
     def _get_response(self, query: str, history: list[dict[str, str]]):
+        if not self.document_processed:
+            yield ["## Please upload a document first!", history, query]
+            return
+        if not query:
+            yield ["", history, ""]
+            return
+
+        query = query.strip()
         message = {'role': 'user', 'content': query}
         text = ""
-        yield history + [message, DEFAULT_ASSISTANT_DICT]
+        yield ["", history + [message, DEFAULT_ASSISTANT_DICT], ""]
         streaming_response = self._pipeline.stream(query)
         for token in streaming_response.response_gen:
             text += token
             assistant_message = {'role': 'assistant', 'content': text}
-            yield history + [message, assistant_message or DEFAULT_ASSISTANT_DICT]
+            yield ["", history + [message, assistant_message or DEFAULT_ASSISTANT_DICT], ""]
 
+    def upload_file(self, files):
+        yield "## Processing documents, please wait..."
+        self._pipeline.process_documents(files)
+        self.document_processed = True
+        yield "## Documents processed successfully!"
+
+    def change_llm(self, model: str):
+        yield "## Changing model, please wait..."
+        self._pipeline.change_llm(model)
+        yield "## Model changed successfully!"
 
     def build(self):
         with gr.Blocks(css=CSS) as app:
+            status = gr.Markdown("")
             with gr.Row():
                 with gr.Column(scale=40):
                     model_name = gr.Dropdown(
-                        choices=["llm3.2:1b", "llm2", "gpt-3.5"],
+                        choices=DEFAULT_MODEL_LIST,
                         label="Model",
                     )
                     file_box = PDF(
@@ -36,10 +56,14 @@ class App:
                         interactive=True
                     )
                     file_box.upload(
-                        fn=self._pipeline.process_documents,
+                        fn=self.upload_file,
                         inputs=[file_box],
-                        outputs=[gr.Textbox(visible=False)],
-                        show_progress='full'
+                        outputs=[status],
+                    )
+                    model_name.change(
+                        fn=self.change_llm,
+                        inputs=[model_name],
+                        outputs=[status]
                     )
                 with gr.Column(scale=60):
                     chatbot = gr.Chatbot(height=650, type='messages')
@@ -52,12 +76,12 @@ class App:
                     )
                     with gr.Row():
                         clear_btn = gr.ClearButton(
-                            [text_box, chatbot], variant="secondary", size="sm"
+                            [chatbot], variant="secondary", size="sm"
                         )
                         submit_btn = gr.Button("Submit", variant="primary", size="sm")
-                        submit = submit_btn.click(
+                        submit_btn.click(
                             fn=self._get_response,
                             inputs=[text_box, chatbot],
-                            outputs=chatbot
+                            outputs=[status, chatbot, text_box]
                         )
         return app
