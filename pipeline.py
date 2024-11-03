@@ -3,7 +3,7 @@ from typing import Optional
 from llama_index.core import Settings
 from llama_index.core.base.embeddings.base import BaseEmbedding
 from llama_index.core.chat_engine.types import BaseChatEngine
-from llama_index.core.schema import BaseNode
+from llama_index.core.schema import BaseNode, logger
 
 from core.chat_engine.chat_engine_manager import ChatEngineManager
 from core.llms.ollama import OllamaModel
@@ -38,6 +38,7 @@ class RAGPipeline:
         self.loader: BaseLoader = SimpleLoader(embed_model=self.embed_model)
 
     def _initialize_llm(self):
+        logger.info(f"Initializing LLM: {self.llm}")
         if "gpt" in self.llm:
             llm_model = OpenAIModel(model=self.llm)
         else:
@@ -50,6 +51,7 @@ class RAGPipeline:
         self._initialize_llm()
 
     def _initialize_retriever(self, nodes: list[BaseNode]):
+        logger.info(f"Initializing Retriever: {self.retriever_name}")
         if self.retriever_name == "hybrid":
             self.retriever = HybridRetriever(
                 nodes=nodes,
@@ -60,6 +62,7 @@ class RAGPipeline:
             raise ValueError("Retriever not supported.")
 
     def _initialize_chat_engine(self):
+        logger.info(f"Initializing Chat Engine: {self.chat_mode}")
         if not self.retriever:
             raise ValueError("Retriever not initialized.")
 

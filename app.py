@@ -1,5 +1,8 @@
 from pages.chatbot import App
 from pipeline import RAGPipeline
+from logs.logging_config import logger
+
+logger.info("Starting the app...")
 
 pipeline = RAGPipeline(
     llm='llama3.2:1b',
@@ -11,3 +14,5 @@ pipeline = RAGPipeline(
 app = App(pipeline)
 demo = app.build()
 demo.launch(server_name='0.0.0.0')
+
+logger.info("App started successfully!")

@@ -1,10 +1,14 @@
 import gradio as gr
 from gradio_pdf import PDF
+
+from logs.logging_config import logger
 from pages.theme import CSS
 from pipeline import RAGPipeline
 from settings import CHAT_MSG_PLACEHOLDER, DEFAULT_MODEL_LIST
 
 DEFAULT_ASSISTANT_DICT = {'role': 'assistant', 'content': CHAT_MSG_PLACEHOLDER}
+
+logger.info("Initializing App in chatbot.py")
 
 class App:
     def __init__(self, pipeline: RAGPipeline):
@@ -13,9 +17,11 @@ class App:
 
     def _get_response(self, query: str, history: list[dict[str, str]]):
         if not self.document_processed:
+            logger.warning("Document not processed yet, cannot get response.")
             yield ["## Please upload a document first!", history, query]
             return
         if not query:
+            logger.info("Empty query received.")
             yield ["", history, ""]
             return
 
@@ -30,12 +36,19 @@ class App:
             yield ["", history + [message, assistant_message or DEFAULT_ASSISTANT_DICT], ""]
 
     def upload_file(self, files):
-        yield "## Processing documents, please wait..."
-        self._pipeline.process_documents(files)
-        self.document_processed = True
-        yield "## Documents processed successfully!"
+        logger.info("Uploading file...")
+        try:
+            yield "## Processing documents, please wait..."
+            self._pipeline.process_documents(files)
+            self.document_processed = True
+            logger.info("Documents processed successfully!")
+            yield "## Documents processed successfully!"
+        except Exception as e:
+            logger.error(f"Error processing documents: {e}")
+            yield "## Error processing documents, please try again!"
 
     def change_llm(self, model: str):
+        logger.info(f"Changing model to: {model}")
         yield "## Changing model, please wait..."
         self._pipeline.change_llm(model)
         yield "## Model changed successfully!"
