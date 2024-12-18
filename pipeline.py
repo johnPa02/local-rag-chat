@@ -35,7 +35,7 @@ class RAGPipeline:
 
         self.chat_engine_manager: Optional[ChatEngineManager] = None
         self.chat_engine: Optional[BaseChatEngine] = None
-        self.loader: BaseLoader = SimpleLoader(embed_model=self.embed_model)
+        self.loader: BaseLoader = SimpleLoader()
 
     def _initialize_llm(self):
         logger.info(f"Initializing LLM: {self.llm}")
