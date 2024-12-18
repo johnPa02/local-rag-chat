@@ -1,8 +1,8 @@
 import gradio as gr
 from gradio_pdf import PDF
 
-from logs.logging_config import logger
-from pages.theme import CSS
+from local_rag_chat.logs.logging_config import logger
+from local_rag_chat.pages.theme import CSS
 from pipeline import RAGPipeline
 from settings import CHAT_MSG_PLACEHOLDER, DEFAULT_MODEL_LIST
 

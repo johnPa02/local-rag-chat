@@ -1,14 +1,14 @@
 import os
 from typing import Optional
 import openai
-from core.llms.base import BaseLLMModel
+from local_rag_chat.core.llms.base import BaseLLMModel
 from llama_index.llms.openai import OpenAI
 
 
 class OpenAIModel(BaseLLMModel):
     def __init__(
             self,
-            model: str = "gpt-3.5-turbo",
+            model: str = "gpt-4o",
             api_key: str = "",
             model_kwargs: Optional[dict] = None
     ):
@@ -31,8 +31,5 @@ class OpenAIModel(BaseLLMModel):
             self.llm = OpenAI(model=self.model, **self.model_kwargs)
 
     def predict(self, query):
-        response = ''
-        stream = self.llm.stream(query)
-        for r in stream:
-            response += r.delta
-        return response
+        resp = self.llm.complete(query)
+        return resp

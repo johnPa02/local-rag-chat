@@ -1,6 +1,8 @@
 from llama_index.core.node_parser import SentenceSplitter, SemanticSplitterNodeParser
 from llama_index.core import Document
-from core.loaders.base import BaseLoader
+from llama_index.core.schema import BaseNode
+
+from local_rag_chat.core.loaders.base import BaseLoader
 import fitz
 import re
 from typing import List
@@ -42,7 +44,7 @@ class SimpleLoader(BaseLoader):
         text = " ".join(text)
         return [Document(text=text)]
 
-    def split(self, documents: List[Document]):
+    def split(self, documents: List[Document]) -> List[BaseNode]:
         if self.embed_model:
             node_parser = SemanticSplitterNodeParser(
                 buffer_size=1, breakpoint_percentile_threshold=95, embed_model=self.embed_model

@@ -5,13 +5,13 @@ from llama_index.core.base.embeddings.base import BaseEmbedding
 from llama_index.core.chat_engine.types import BaseChatEngine
 from llama_index.core.schema import BaseNode, logger
 
-from core.chat_engine.chat_engine_manager import ChatEngineManager
-from core.llms.ollama import OllamaModel
-from core.llms.openai import OpenAIModel
-from core.loaders.base import BaseLoader
-from core.loaders.simple_loader import SimpleLoader
-from core.retrievers.hybrid_retriever import HybridRetriever
-from core.embeddings.embedding_manager import EmbeddingManager
+from local_rag_chat.core.chat_engine.chat_engine_manager import ChatEngineManager
+from local_rag_chat.core.llms.ollama import OllamaModel
+from local_rag_chat.core.llms.openai import OpenAIModel
+from local_rag_chat.core.loaders.base import BaseLoader
+from local_rag_chat.core.loaders.simple_loader import SimpleLoader
+from local_rag_chat.core.retrievers.hybrid_retriever import HybridRetriever
+from local_rag_chat.core.embeddings.embedding_manager import EmbeddingManager
 
 class RAGPipeline:
     def __init__(
@@ -91,7 +91,3 @@ class RAGPipeline:
         for file in file_paths:
             documents.extend(self.loader.fit(file))
         self._initialize_retriever(documents)
-
-
-
-

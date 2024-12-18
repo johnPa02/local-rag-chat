@@ -1,6 +1,6 @@
-from pages.chatbot import App
+from local_rag_chat.pages.chatbot import App
 from pipeline import RAGPipeline
-from logs.logging_config import logger
+from local_rag_chat.logs.logging_config import logger
 
 logger.info("Starting the app...")
 

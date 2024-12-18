@@ -16,6 +16,7 @@ python-dotenv = "^1.0.1"
 openai = "^1.51.2"
 llama-index-embeddings-huggingface = "^0.3.1"
 llama-index-retrievers-bm25 = "^0.4.0"
+matplotlib = "^3.10.0"
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,8 +1,8 @@
-from core.llms.base import BaseLLMModel
+from local_rag_chat.core.llms.base import BaseLLMModel
 from llama_index.llms.ollama import Ollama
 import requests
 
-from logs.logging_config import logger
+from local_rag_chat.logs.logging_config import logger
 from settings import OLLAMA_BASE_URL
 
 
