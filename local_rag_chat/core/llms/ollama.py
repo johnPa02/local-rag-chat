@@ -3,7 +3,7 @@ from llama_index.llms.ollama import Ollama
 import requests
 
 from local_rag_chat.logs.logging_config import logger
-from settings import OLLAMA_BASE_URL
+from configs import OLLAMA_BASE_URL
 
 
 class OllamaModel(BaseLLMModel):
@@ -19,7 +19,7 @@ class OllamaModel(BaseLLMModel):
         self.llm = Ollama(
             model=self.model,
             base_url=OLLAMA_BASE_URL,
-            request_timeout=120
+            request_timeout=180
         )
         logger.info(f"Loaded Ollama model: {self.model}")
 

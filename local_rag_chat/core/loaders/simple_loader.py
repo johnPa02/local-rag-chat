@@ -12,8 +12,12 @@ class SimpleLoader(BaseLoader):
     Simple loader that handles simple file types like PDFs.
     Supports splitting by semantic or sentence.
     """
-    def __init__(self, embed_model=None):
-        super().__init__()
+    def __init__(self,
+                embed_model=None,
+                chunk_size=512,
+                chunk_overlap=100
+    ):
+        super().__init__(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
         self.embed_model = embed_model
 
     @staticmethod

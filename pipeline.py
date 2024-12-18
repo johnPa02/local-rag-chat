@@ -1,10 +1,8 @@
 from typing import Optional
-
 from llama_index.core import Settings
 from llama_index.core.base.embeddings.base import BaseEmbedding
 from llama_index.core.chat_engine.types import BaseChatEngine
-from llama_index.core.schema import BaseNode, logger
-
+from llama_index.core.schema import BaseNode
 from local_rag_chat.core.chat_engine.chat_engine_manager import ChatEngineManager
 from local_rag_chat.core.llms.ollama import OllamaModel
 from local_rag_chat.core.llms.openai import OpenAIModel
@@ -12,6 +10,7 @@ from local_rag_chat.core.loaders.base import BaseLoader
 from local_rag_chat.core.loaders.simple_loader import SimpleLoader
 from local_rag_chat.core.retrievers.hybrid_retriever import HybridRetriever
 from local_rag_chat.core.embeddings.embedding_manager import EmbeddingManager
+from local_rag_chat.logs.logging_config import logger
 
 class RAGPipeline:
     def __init__(

@@ -2,7 +2,7 @@ class BaseLoader:
     """
     Base class for all loaders.
     """
-    def __init__(self):
+    def __init__(self, chunk_size=512, chunk_overlap=100):
         self.chunk_size = 512
         self.chunk_overlap = 100
 
