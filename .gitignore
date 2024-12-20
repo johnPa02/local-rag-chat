@@ -1,6 +1,6 @@
 local_rag_chat/eval/data/
 .idea/
-
+local_rag_chat/eval/rag_evaluation.ipynb
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
