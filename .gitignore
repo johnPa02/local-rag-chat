@@ -1,4 +1,5 @@
 local_rag_chat/eval/data/
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
