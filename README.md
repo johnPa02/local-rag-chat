@@ -61,17 +61,17 @@ poetry install
 cp .env.example .env
 ```
 #### 4. Ollama
-    - This project supports Ollama models. Download and Install Ollama on your device (https://ollama.com/download). Make sure to install your preferred LLM using `ollama run <model>`.
+This project supports Ollama models. Download and Install Ollama on your device (https://ollama.com/download). Make sure to install your preferred LLM using `ollama run <model>`.
+
+Tested with `llama3`, `llama3:70b` and `mistral`. The bigger models generally perform better, but need more computational power.
+
+> Make sure Ollama Server runs in the background and that you don't ingest documents with different ollama models since their vector dimension can vary that will lead to errors
+
+You can verify that by running the following command
     
-    Tested with `llama3`, `llama3:70b` and `mistral`. The bigger models generally perform better, but need more computational power.
-    
-    > Make sure Ollama Server runs in the background and that you don't ingest documents with different ollama models since their vector dimension can vary that will lead to errors
-    
-    You can verify that by running the following command
-    
-    ```
-    ollama run llama3
-    ```
+```
+ollama run llama3
+```
 #### 5. Run the application
 - Before running the application, change the `OLLAMA_BASE_URL` in the configs.py file to `http://ollama_server:11434`
   ```
