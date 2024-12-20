@@ -24,7 +24,7 @@ This project implements a Retrieval-Augmented Generation (RAG) chatbot capable o
 | 📁 Data Support    | Implemented | Description                                   |
 |--------------------|------------|-----------------------------------------------|
 | PDF Ingestion      | ✅          | Import PDF                                    |
-| CSV/XLSX Ingestion | planned ⏱️ | Import Table Data into Verba                  |
+| CSV/XLSX Ingestion | planned ⏱️ | Import Table Data              |
 | .DOCX              | planned ⏱️ | Import .docx files                            |
 | Multi-Modal        | planned ⏱️ | Import and Transcribe Audio through AssemblyAI |
 
