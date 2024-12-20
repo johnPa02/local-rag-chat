@@ -4,8 +4,10 @@ from gradio_pdf import PDF
 from local_rag_chat.logs.logging_config import logger
 from local_rag_chat.pages.theme import CSS
 from pipeline import RAGPipeline
-from settings import CHAT_MSG_PLACEHOLDER, DEFAULT_MODEL_LIST
 
+
+CHAT_MSG_PLACEHOLDER = "Thinking..."
+DEFAULT_MODEL_LIST = ["llm3.2:1b", "llama3.2", "gpt-4o", "gpt-3.5"]
 DEFAULT_ASSISTANT_DICT = {'role': 'assistant', 'content': CHAT_MSG_PLACEHOLDER}
 
 logger.info("Initializing App in chatbot.py")
@@ -79,7 +81,7 @@ class App:
                         outputs=[status]
                     )
                 with gr.Column(scale=60):
-                    chatbot = gr.Chatbot(height=650, type='messages')
+                    chatbot = gr.Chatbot(min_height=650, type='messages')
                     text_box = gr.Textbox(
                         lines=2,
                         label="Chat message",

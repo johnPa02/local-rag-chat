@@ -6,7 +6,6 @@ logger.info("Starting the app...")
 
 pipeline = RAGPipeline(
     llm='llama3.2:1b',
-    retriever_name='hybrid',
     embedding='BAAI/bge-small-en-v1.5',
     chat_mode='condense_plus_context'
 )

@@ -1,9 +1,9 @@
 from typing import Optional, List
-
 from llama_index.core import VectorStoreIndex, StorageContext
 from llama_index.core.base.base_retriever import BaseRetriever
 from llama_index.core.base.embeddings.base import BaseEmbedding
 from llama_index.core.retrievers import QueryFusionRetriever
+from llama_index.core.retrievers.fusion_retriever import FUSION_MODES
 from llama_index.retrievers.bm25 import BM25Retriever
 from llama_index.core.schema import BaseNode, QueryBundle, NodeWithScore
 from llama_index.core.vector_stores.types import BasePydanticVectorStore
@@ -56,7 +56,7 @@ class HybridRetriever(BaseRetriever):
             num_queries=1,
             retriever_weights=[0.6, 0.4],
             use_async=True,
-            mode="reciprocal_rerank"
+            mode=FUSION_MODES.RECIPROCAL_RANK
             # llm=self.llm
         )
         return hybrid_retriever
